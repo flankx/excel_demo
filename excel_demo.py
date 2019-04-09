@@ -32,7 +32,7 @@ def r_w_excel_xls(path):
     style_compression:表示是否压缩，不常用。
     '''
     # 创建一个Workbook对象，相当于创建了一个Excel文件
-    book = xlwt.Workbook(encoding="utf-8", style_compression=0)
+    book = xlwt.Workbook(encoding="utf-8", style_compression=2)
 
     '''对workbook对象进行操作'''
     # 获取所有sheet的名字
@@ -55,19 +55,24 @@ def r_w_excel_xls(path):
         row = worksheet.row_values(i)
         if i == 0:
             row.append('encrypt_phone')
-        else:
+        elif row[1]::
             row.append(hashlib.md5(row[1]))
-        print row
+        print i, row
         for j in range(ncols+1):
-            # 选择日期的样式
-            style1 = xlwt.easyxf(num_format_str='YYYY/MM/DD')
-            style2 = xlwt.easyxf(num_format_str='h:mm:ss')
-            if j == 2:
-                sheet.write(i, j, row[j], style1)
-            elif j == 3:
-                sheet.write(i, j, row[j], style2)
-            else:
-                sheet.write(i, j, row[j])
+            try:
+                # 选择日期的样式
+                style1 = xlwt.easyxf(num_format_str='YYYY/MM/DD')
+                style2 = xlwt.easyxf(num_format_str='hh:mm:ss')
+                if j == 2:
+                    sheet.write(i, j, row[j], style1)
+                elif j == 3:
+                    sheet.write(i, j, row[j], style2)
+                else:
+                    sheet.write(i, j, row[j])
+            except Exception, e:
+                print e
+                continue
+
     book.save('/tmp/encrypt_result.xls')
 
 
